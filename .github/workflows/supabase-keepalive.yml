@@ -10,8 +10,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Ping Supabase Table
+      - name: Insert Keep Alive Row
         run: |
-          curl -X GET "${{ secrets.SUPABASE_URL }}/rest/v1/keepalive" \
+          echo "Pinging Supabase..."
+
+          curl --fail --silent --show-error \
+          -X POST "${{ secrets.SUPABASE_URL }}/rest/v1/keep_alive_logs" \
           -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
+          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+          -H "Content-Type: application/json" \
+          -d '{"status":"alive"}'
+
+          echo "Done"
